@@ -114,7 +114,7 @@ class Settings {
             this.getinfo_web();
             this.add_listening_events(); // 监听函数只用加在web端，因为acapp端没有登录界面
         }
-        
+
     }
 
     add_listening_events() {
@@ -152,7 +152,6 @@ class Settings {
             url: "https://app5491.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
             type: "GET",
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -174,7 +173,6 @@ class Settings {
                 password: password,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 } else {
@@ -200,7 +198,6 @@ class Settings {
                 password_confirm: password_confirm,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();  // 刷新页面
                 } else {
@@ -211,18 +208,20 @@ class Settings {
     }
 
     logout_on_remote() {  // 在远程服务器上登出
-        if (this.platform === "ACAPP") return false;
+        if (this.platform === "ACAPP") {
+            this.root.AcWingOS.api.window.close();
+        } else {
 
-        $.ajax({
-            url: "https://app5491.acapp.acwing.com.cn/settings/logout/",
-            type: "GET",
-            success: function(resp) {
-                console.log(resp);
-                if (resp.result === "success") {
-                    location.reload();
+            $.ajax({
+                url: "https://app5491.acapp.acwing.com.cn/settings/logout/",
+                type: "GET",
+                success: function(resp) {
+                    if (resp.result === "success") {
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     register() {  // 打开注册界面
@@ -238,8 +237,6 @@ class Settings {
     acapp_login(appid, redirect_uri, scope, state) {
         let outer = this;
         this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
-            console.log("called from acwing_login function");
-            console.log(resp);
             if (resp.result === "success") {
                 outer.username = resp.username;
                 outer.photo = resp.photo;
@@ -273,7 +270,6 @@ class Settings {
                 platform: outer.platform,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     outer.username = resp.username;
                     outer.photo = resp.photo;
