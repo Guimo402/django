@@ -70,7 +70,7 @@ class Player extends AcGameObject {
         });
         this.playground.game_map.$canvas.mousedown(function(e) {
             if (outer.playground.state !== "fighting")
-                return false;
+                return true;
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
@@ -109,7 +109,16 @@ class Player extends AcGameObject {
             }
         });
 
-        $(window).keydown(function(e) {
+        this.playground.game_map.$canvas.keydown(function(e) {
+            if (e.which === 13) {
+                if (outer.playground.mode === "multi mode") {  // open the chat field
+                    outer.playground.chat_field.show_input();
+                }
+            } else if (e.which === 27) {
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.hide_input();
+                }
+            }
             // Eventually, return false to block browser default keyboard events
             if (outer.playground.state !== "fighting") {
                 return true; // keyboard events are allowed when not in fighting mode
