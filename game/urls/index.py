@@ -1,6 +1,9 @@
 from django.urls import path, include
 from game.views.index import index
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path("", index, name="index"),
